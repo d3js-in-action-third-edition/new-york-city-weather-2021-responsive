@@ -27,7 +27,7 @@ const createTooltip = () => {
 const handleMouseEvents = () => {
 
   innerChart.selectAll("circle")
-    .on("mouseenter, touchstart", (e, d) => {
+    .on("mouseenter", (e, d) => {
       console.log("DOM event", e);
       console.log("Attached datum", d);
 
