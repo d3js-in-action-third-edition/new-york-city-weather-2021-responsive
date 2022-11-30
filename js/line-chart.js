@@ -1,21 +1,5 @@
-// Load the data here
-d3.csv("./data/weekly_temperature.csv", d3.autoType).then(data => {
-  console.log("temperature data", data);
-  drawLineChart(data);
-});
-
 // Create the line chart here
 const drawLineChart = (data) => {
-
-  /*******************************/
-  /*    Declare the constants    */
-  /*******************************/
-  const margin = {top: 40, right: 170, bottom: 25, left: 40};
-  const width = 1000;
-  const height = 500;
-  const innerWidth = width - margin.left - margin.right;
-  const innerHeight = height - margin.top - margin.bottom;
-  const aubergine = "#75485E";
 
 
   /*******************************/
@@ -27,8 +11,9 @@ const drawLineChart = (data) => {
       .attr("viewBox", `0, 0, ${width}, ${height}`);
 
   // Append the group that will contain the inner chart
-  const innerChart = svg
+  innerChart = svg
     .append("g")
+      .attr("class", "inner-chart")
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
   
@@ -38,13 +23,13 @@ const drawLineChart = (data) => {
   // X scale
   const firstDate = new Date(2021, 00, 01, 0, 0, 0);
   const lastDate = d3.max(data, d => d.date);
-  const xScale = d3.scaleTime()
+  xScale
     .domain([firstDate, lastDate])
     .range([0, innerWidth]);
 
   // Y scale
   const maxTemp = d3.max(data, d => d.max_temp_F);
-  const yScale = d3.scaleLinear()
+  yScale
     .domain([0, maxTemp])
     .range([innerHeight, 0]);
 
@@ -69,23 +54,16 @@ const drawLineChart = (data) => {
     .attr("y", "10px");
 
   // Left axis
-  const leftAxis = d3.axisLeft(yScale);
+  leftAxis = d3.axisLeft(yScale);
   innerChart
     .append("g")
       .attr("class", "axis-y")
       .call(leftAxis);
-  d3.selectAll(".axis-y text")
-    .attr("x", "-5px");
-
-  // Set the font-family and font-size property of axis labels
-  // This could also be handled from a CSS file
-  d3.selectAll(".axis-x text, .axis-y text")
-    .style("font-family", "Roboto, sans-serif")
-    .style("font-size", "14px");
 
   // Add label to the y-axis
   svg
     .append("text")
+      .attr("class", "axis-main-label")
       .text("Temperature (°F)")
       .attr("y", 20);
 
@@ -94,7 +72,7 @@ const drawLineChart = (data) => {
   /*   Area chart of the temperature variability  */
   /************************************************/
   // Initialize the area generator
-  const areaGenerator = d3.area()
+  areaGenerator
     .x(d => xScale(d.date))
     .y0(d => yScale(d.min_temp_F))
     .y1(d => yScale(d.max_temp_F))
@@ -103,6 +81,7 @@ const drawLineChart = (data) => {
   // Draw the area
   innerChart
     .append("path")
+      .attr("class", "temperature-area")
       .attr("d", areaGenerator(data))
       .attr("fill", aubergine)
       .attr("fill-opacity", 0.2);
@@ -116,13 +95,13 @@ const drawLineChart = (data) => {
     .selectAll("circle")
     .data(data)
     .join("circle")
-      .attr("r", 4)
+      .attr("r", isDesktopLayout ? 5 : 8)
       .attr("cx", d => xScale(d.date))
       .attr("cy", d => yScale(d.avg_temp_F))
       .attr("fill", aubergine);
     
   // Initialize the line/curve generator
-  const curveGenerator = d3.line()
+  curveGenerator
     .x(d => xScale(d.date))
     .y(d => yScale(d.avg_temp_F))
     .curve(d3.curveCatmullRom);
@@ -130,6 +109,7 @@ const drawLineChart = (data) => {
   // Draw the line/curve
   innerChart
     .append("path")
+      .attr("class", "temperature-curve")
       .attr("d", curveGenerator(data))
       .attr("fill", "none")
       .attr("stroke", aubergine);
@@ -142,6 +122,7 @@ const drawLineChart = (data) => {
   // Label for line chart
   innerChart
     .append("text")
+      .attr("class", "annotation")
       .text("Average temperature")
       .attr("x", xScale(lastDate) + 10)
       .attr("y", yScale(data[data.length - 1].avg_temp_F))
@@ -149,36 +130,45 @@ const drawLineChart = (data) => {
       .attr("fill", aubergine);
 
   // Annotation for max temperature
+  const maxAnnotationIndex = getMaxAnnotationIndex();
   innerChart
     .append("text")
+      .attr("class", "annotation annotation-max")
       .text("Maximum temperature")
-      .attr("x", xScale(data[data.length - 4].date) + 13)
-      .attr("y", yScale(data[data.length - 4].max_temp_F) - 20)
+      .attr("x", xScale(data[data.length - maxAnnotationIndex].date) + 13)
+      .attr("y", yScale(data[data.length - maxAnnotationIndex].max_temp_F) - 20)
       .attr("fill", aubergine);
   innerChart
     .append("line")
-      .attr("x1", xScale(data[data.length - 4].date))
-      .attr("y1", yScale(data[data.length - 4].max_temp_F) - 3)
-      .attr("x2", xScale(data[data.length - 4].date) + 10)
-      .attr("y2", yScale(data[data.length - 4].max_temp_F) - 20)
+      .attr("class", "annotation-line annotation-line-max")
+      .attr("x1", xScale(data[data.length - maxAnnotationIndex].date))
+      .attr("y1", yScale(data[data.length - maxAnnotationIndex].max_temp_F) - 3)
+      .attr("x2", xScale(data[data.length - maxAnnotationIndex].date) + 10)
+      .attr("y2", yScale(data[data.length - maxAnnotationIndex].max_temp_F) - 20)
       .attr("stroke", aubergine)
       .attr("stroke-width", 2);
 
   // Annotation for min temperature
+  const minAnnotationIndex = getMinAnnotationIndex();
   innerChart
     .append("text")
+      .attr("class", "annotation annotation-min")
       .text("Minimum temperature")
-      .attr("x", xScale(data[data.length - 3].date) + 13)
-      .attr("y", yScale(data[data.length - 3].min_temp_F) + 20)
+      .attr("x", xScale(data[data.length - minAnnotationIndex].date) + 13)
+      .attr("y", yScale(data[data.length - minAnnotationIndex].min_temp_F) + 20)
       .attr("dominant-baseline", "hanging")
       .attr("fill", aubergine);
   innerChart
     .append("line")
-      .attr("x1", xScale(data[data.length - 3].date))
-      .attr("y1", yScale(data[data.length - 3].min_temp_F) + 3)
-      .attr("x2", xScale(data[data.length - 3].date) + 10)
-      .attr("y2", yScale(data[data.length - 3].min_temp_F) + 20)
+      .attr("class", "annotation-line annotation-line-min")
+      .attr("x1", xScale(data[data.length - minAnnotationIndex].date))
+      .attr("y1", yScale(data[data.length - minAnnotationIndex].min_temp_F) + 3)
+      .attr("x2", xScale(data[data.length - minAnnotationIndex].date) + 10)
+      .attr("y2", yScale(data[data.length - minAnnotationIndex].min_temp_F) + 20)
       .attr("stroke", aubergine)
       .attr("stroke-width", 2);
+
+
+  resizeChart();
 
 };

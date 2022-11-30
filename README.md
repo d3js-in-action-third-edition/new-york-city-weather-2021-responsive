@@ -1,0 +1,2 @@
+# New York City 2021 Weather
+Project built along with chapter 9 of [D3.js in Action, 3rd edition](https://www.manning.com/books/d3js-in-action-third-edition). Refer to the exercise files for a breakdown of each step.

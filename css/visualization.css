@@ -7,3 +7,12 @@
   margin: 0 auto;
   max-width: 300px;
 }
+
+/* Axis and labels styles */
+.tick text {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.4rem;
+}
+.chart-label {
+  font-size: 1.6rem;
+}
