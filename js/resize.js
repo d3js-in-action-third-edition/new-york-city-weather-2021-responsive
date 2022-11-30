@@ -13,7 +13,8 @@ const resizeChart = () => {
 
   // Adapt the number of ticks on the y-axis
   leftAxis
-    .ticks(windowWidth / 120);
+    // .ticks(windowWidth / 110);
+    .ticks(isDesktopLayout ? 10 : 5);
   d3.select(".axis-y")
     .transition()
     .call(leftAxis);
@@ -54,24 +55,4 @@ const updateData = () => {
       .attr("cy", d => yScale(d.avg_temp_F))
       .attr("fill", aubergine);
 
-  // Move Annotations
-  const maxAnnotationIndex = getMaxAnnotationIndex();
-  d3.select(".annotation-max")
-    .attr("x", xScale(data[data.length - maxAnnotationIndex].date) + 13)
-    .attr("y", yScale(data[data.length - maxAnnotationIndex].max_temp_F) - 20);
-  d3.select(".annotation-line-max")
-    .attr("x1", xScale(data[data.length - maxAnnotationIndex].date))
-    .attr("y1", yScale(data[data.length - maxAnnotationIndex].max_temp_F) - 3)
-    .attr("x2", xScale(data[data.length - maxAnnotationIndex].date) + 10)
-    .attr("y2", yScale(data[data.length - maxAnnotationIndex].max_temp_F) - 20);
-
-  const minAnnotationIndex = getMinAnnotationIndex();
-  d3.select(".annotation-min")
-    .attr("x", xScale(data[data.length - minAnnotationIndex].date) + 13)
-    .attr("y", yScale(data[data.length - minAnnotationIndex].min_temp_F) + 20);
-  d3.select(".annotation-line-min")
-    .attr("x1", xScale(data[data.length - minAnnotationIndex].date))
-    .attr("y1", yScale(data[data.length - minAnnotationIndex].min_temp_F) + 3)
-    .attr("x2", xScale(data[data.length - minAnnotationIndex].date) + 10)
-    .attr("y2", yScale(data[data.length - minAnnotationIndex].min_temp_F) + 20);
 }

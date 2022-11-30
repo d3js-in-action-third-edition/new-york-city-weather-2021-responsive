@@ -114,60 +114,6 @@ const drawLineChart = (data) => {
       .attr("fill", "none")
       .attr("stroke", aubergine);
 
-      
-  /************************/
-  /*      Add labels      */
-  /************************/
-
-  // Label for line chart
-  innerChart
-    .append("text")
-      .attr("class", "annotation")
-      .text("Average temperature")
-      .attr("x", xScale(lastDate) + 10)
-      .attr("y", yScale(data[data.length - 1].avg_temp_F))
-      .attr("dominant-baseline", "middle")
-      .attr("fill", aubergine);
-
-  // Annotation for max temperature
-  const maxAnnotationIndex = getMaxAnnotationIndex();
-  innerChart
-    .append("text")
-      .attr("class", "annotation annotation-max")
-      .text("Maximum temperature")
-      .attr("x", xScale(data[data.length - maxAnnotationIndex].date) + 13)
-      .attr("y", yScale(data[data.length - maxAnnotationIndex].max_temp_F) - 20)
-      .attr("fill", aubergine);
-  innerChart
-    .append("line")
-      .attr("class", "annotation-line annotation-line-max")
-      .attr("x1", xScale(data[data.length - maxAnnotationIndex].date))
-      .attr("y1", yScale(data[data.length - maxAnnotationIndex].max_temp_F) - 3)
-      .attr("x2", xScale(data[data.length - maxAnnotationIndex].date) + 10)
-      .attr("y2", yScale(data[data.length - maxAnnotationIndex].max_temp_F) - 20)
-      .attr("stroke", aubergine)
-      .attr("stroke-width", 2);
-
-  // Annotation for min temperature
-  const minAnnotationIndex = getMinAnnotationIndex();
-  innerChart
-    .append("text")
-      .attr("class", "annotation annotation-min")
-      .text("Minimum temperature")
-      .attr("x", xScale(data[data.length - minAnnotationIndex].date) + 13)
-      .attr("y", yScale(data[data.length - minAnnotationIndex].min_temp_F) + 20)
-      .attr("dominant-baseline", "hanging")
-      .attr("fill", aubergine);
-  innerChart
-    .append("line")
-      .attr("class", "annotation-line annotation-line-min")
-      .attr("x1", xScale(data[data.length - minAnnotationIndex].date))
-      .attr("y1", yScale(data[data.length - minAnnotationIndex].min_temp_F) + 3)
-      .attr("x2", xScale(data[data.length - minAnnotationIndex].date) + 10)
-      .attr("y2", yScale(data[data.length - minAnnotationIndex].min_temp_F) + 20)
-      .attr("stroke", aubergine)
-      .attr("stroke-width", 2);
-
 
   resizeChart();
 
