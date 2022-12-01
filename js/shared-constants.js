@@ -6,7 +6,7 @@ let isDesktopLayout = windowWidth >= 700 ? true : false;
 
 // Chart
 const margin = {top: 35, right: isDesktopLayout ? 250 : 10, bottom: 35, left: 45};
-const width = 1000;
+const width = 1200;
 const height = 500;
 let innerWidth = width - margin.left - margin.right;
 const innerHeight = height - margin.top - margin.bottom;
