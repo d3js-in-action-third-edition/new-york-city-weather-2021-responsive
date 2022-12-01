@@ -1,8 +1,14 @@
+const getWindowWidth = () => {
+  return window.innerWidth;
+};
+let windowWidth = getWindowWidth();
+let isDesktopLayout = windowWidth >= 700 ? true : false;
+
 // Chart
-const margin = {top: 35, right: 10, bottom: 35, left: 45};
+const margin = {top: 35, right: isDesktopLayout ? 250 : 10, bottom: 35, left: 45};
 const width = 1000;
 const height = 500;
-const innerWidth = width - margin.left - margin.right;
+let innerWidth = width - margin.left - margin.right;
 const innerHeight = height - margin.top - margin.bottom;
 const aubergine = "#75485E";
 let innerChart;
@@ -19,16 +25,10 @@ const fontSizeScale = d3.scaleLinear()
   .range([26, 16])
   .clamp(true);
 
+let bottomAxis;
 let leftAxis;
 const curveGenerator = d3.line();
 const areaGenerator = d3.area();
 
 let desktopData;
 let mobileData;
-
-const getMaxAnnotationIndex = () => {
-  return isDesktopLayout ? 4 : 5;
-};
-const getMinAnnotationIndex = () => {
-  return isDesktopLayout ? 3 : 2;
-};

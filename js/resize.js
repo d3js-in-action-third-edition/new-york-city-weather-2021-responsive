@@ -1,9 +1,3 @@
-const getWindowWidth = () => {
-  return window.innerWidth;
-};
-let windowWidth = getWindowWidth();
-let isDesktopLayout = windowWidth >= 700 ? true : false;
-
 window.addEventListener("resize", () => {
   windowWidth = getWindowWidth();
   resizeChart();
@@ -33,6 +27,24 @@ const resizeChart = () => {
 
 const updateData = () => {
   const data = isDesktopLayout ? desktopData : mobileData;
+  margin.right = isDesktopLayout ? 250 : 10;
+  innerWidth = width - margin.left - margin.right;
+
+  // Update xScale
+  xScale.range([0, innerWidth]);
+
+  // Update x-axis
+  bottomAxis = d3.axisBottom(xScale)
+    .tickFormat(d3.timeFormat("%b"));
+  d3.select(".axis-x")
+    .call(bottomAxis);
+  d3.selectAll(".axis-x text")
+    .attr("x", d => {
+       const currentMonth = d;
+       const nextMonth = new Date(2021, currentMonth.getMonth() + 1, 1);
+       return (xScale(nextMonth) - xScale(currentMonth)) / 2;
+    })
+    .attr("y", "10px");
 
   // Update area
   d3.select(".temperature-area")
@@ -54,5 +66,11 @@ const updateData = () => {
       .attr("cx", d => xScale(d.date))
       .attr("cy", d => yScale(d.avg_temp_F))
       .attr("fill", aubergine);
+
+  if (isDesktopLayout) {
+    appendAnnotations(data, xScale, yScale);
+  } else {
+    removeAnnotations();
+  }
 
 }

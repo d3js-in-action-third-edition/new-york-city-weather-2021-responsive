@@ -38,7 +38,7 @@ const drawLineChart = (data) => {
   /*     Append the axes     */
   /***************************/
   // Bottom axis
-  const bottomAxis = d3.axisBottom(xScale)
+  bottomAxis = d3.axisBottom(xScale)
     .tickFormat(d3.timeFormat("%b"));
   innerChart
     .append("g")
@@ -114,6 +114,13 @@ const drawLineChart = (data) => {
       .attr("fill", "none")
       .attr("stroke", aubergine);
 
+      
+  /************************/
+  /*      Add labels      */
+  /************************/
+  if (isDesktopLayout) {
+    appendAnnotations(data, xScale, yScale);
+  }
 
   resizeChart();
 
