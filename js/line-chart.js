@@ -44,7 +44,6 @@ const drawLineChart = (data) => {
       .attr("class", "axis-x")
       .attr("transform", `translate(0, ${innerHeight})`)
       .call(bottomAxis);
-  console.log(xScale(15))
   positionXaxisLabels();
 
   // Left axis

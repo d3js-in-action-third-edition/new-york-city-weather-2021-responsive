@@ -40,7 +40,6 @@ const positionXaxisLabels = () => {
     .attr("x", d => {
       const currentMonth = d;
       const nextMonth = new Date(2021, currentMonth.getMonth() + 1, 1);
-      console.log(xScale(currentMonth))
       return (xScale(nextMonth) - xScale(currentMonth)) / 2;
     })
     .attr("y", 10);
