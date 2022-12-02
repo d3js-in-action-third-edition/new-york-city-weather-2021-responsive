@@ -1,4 +1,4 @@
-const appendAnnotations = (data, xScale, yScale) => {
+const appendAnnotations = () => {
   const lastDate = d3.max(data, d => d.date);
 
   const annotations = innerChart

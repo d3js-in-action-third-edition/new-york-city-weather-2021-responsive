@@ -1,20 +1,9 @@
-Promise.all([
-  d3.csv("./data/weekly_temperature.csv", d3.autoType),
-  d3.csv("./data/weekly_temperature_mobile.csv", d3.autoType)
-]).then(data => {
-  console.log("temperature data", data);
+d3.csv("../data/weekly_temperature.csv", d3.autoType).then(d => {
+  console.log("temperature data", d);
 
-  desktopData = data[0];
-  mobileData = data[1];
-
-  let chartData;
-  if (window.innerWidth >= 700) {
-    chartData = desktopData;
-  } else {
-    chartData = mobileData;
-  }
+  data = d;
   
-  drawLineChart(chartData);
+  drawLineChart(data);
   createTooltip();
   handleMouseEvents();
 });

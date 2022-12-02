@@ -13,7 +13,6 @@ const drawLineChart = (data) => {
   // Append the group that will contain the inner chart
   innerChart = svg
     .append("g")
-      .attr("class", "inner-chart")
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
   
@@ -45,25 +44,26 @@ const drawLineChart = (data) => {
       .attr("class", "axis-x")
       .attr("transform", `translate(0, ${innerHeight})`)
       .call(bottomAxis);
-  d3.selectAll(".axis-x text")
-    .attr("x", d => {
-       const currentMonth = d;
-       const nextMonth = new Date(2021, currentMonth.getMonth() + 1, 1);
-       return (xScale(nextMonth) - xScale(currentMonth)) / 2;
-    })
-    .attr("y", "10px");
+  console.log(xScale(15))
+  positionXaxisLabels();
 
   // Left axis
-  leftAxis = d3.axisLeft(yScale);
+  leftAxis = d3.axisLeft(yScale)
+    .ticks(isDesktopLayout ? 10 : 5);
   innerChart
     .append("g")
       .attr("class", "axis-y")
       .call(leftAxis);
 
+  // Set the font-family and font-size property of axis labels
+  // This could also be handled from a CSS file
+  d3.selectAll(".axis-x text, .axis-y text")
+    .style("font-family", "Roboto, sans-serif")
+    .style("font-size", "14px");
+
   // Add label to the y-axis
   svg
     .append("text")
-      .attr("class", "axis-main-label")
       .text("Temperature (°F)")
       .attr("y", 20);
 
@@ -95,7 +95,7 @@ const drawLineChart = (data) => {
     .selectAll("circle")
     .data(data)
     .join("circle")
-      .attr("r", isDesktopLayout ? 5 : 8)
+      .attr("r", 5)
       .attr("cx", d => xScale(d.date))
       .attr("cy", d => yScale(d.avg_temp_F))
       .attr("fill", aubergine);
@@ -115,11 +115,11 @@ const drawLineChart = (data) => {
       .attr("stroke", aubergine);
 
       
-  /************************/
-  /*      Add labels      */
-  /************************/
+  /*****************************/
+  /*      Add annotations      */
+  /*****************************/
   if (isDesktopLayout) {
-    appendAnnotations(data, xScale, yScale);
+    appendAnnotations();
   }
 
   resizeChart();
